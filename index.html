@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashing Detective — The Midnight Protocol</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Mobile Navigation Toggle -->
+    <button id="mobile-menu-toggle" aria-label="Toggle Menu" onclick="toggleMobileSidebar()">☰</button>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="logo">
+                <span class="logo-icon">🕵️</span>
+                <div>
+                    <span class="logo-text-white">DASHING</span><br>
+                    <span class="logo-text-red">DETECTIVE</span>
+                </div>
+            </div>
+
+            <div class="mission-status-box">
+                <span class="status-indicator-live">● ACTIVE CASE</span>
+                <h4>THE MIDNIGHT PROTOCOL</h4>
+                <p>Victim: Dr. Marcus Vance</p>
+                <div class="countdown-badge" id="sidebar-countdown">⏱️ Antidote: 59:45</div>
+            </div>
+
+            <nav>
+                <ul id="sidebar-nav">
+                    <li class="active"><a href="#case" onclick="setActiveNav(this)">📁 Case Briefing</a></li>
+                    <li><a href="#crime-scene" onclick="openCrimeScene(); return false;">🏢 Crime Scene (Lab 204)</a></li>
+                    <li><a href="#fsl" onclick="openForensicLab(); return false;">🔬 Forensic Lab (FSL)</a></li>
+                    <li><a href="#corkboard" onclick="openCorkboard(); return false;">🧵 Deduction Corkboard</a></li>
+                    <li><a href="#suspect" onclick="setActiveNav(this)">👥 Suspects (8)</a></li>
+                    <li><a href="#evidence" onclick="setActiveNav(this)">🔍 Physical Evidence</a></li>
+                    <li><a href="#witness" onclick="setActiveNav(this)">👁️ Witnesses</a></li>
+                    <li><a href="#accusation" onclick="setActiveNav(this)">⚖️ Final Confrontation</a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-quote">
+                <img src="images/quote.png" alt="Detective" class="quote-image">
+                <p>"Kuch toh gadbad hai... Look deeper at what the evidence whispers."</p>
+                <span>— Detective's Creed</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar with Suspense Status & Credibility Shields -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <span class="case-badge">CASE #001 · HIGH PRIORITY</span>
+                    <h2 class="case-name">The Midnight Protocol</h2>
+                </div>
+
+                <div class="topbar-center">
+                    <div class="credibility-container" title="Detective Credibility: Lose all 3 and the Chief revokes your badge!">
+                        <span class="cred-label">CREDIBILITY:</span>
+                        <div id="credibility-badges" class="cred-badges">
+                            <span class="cred-shield active" id="shield-1">🛡️</span>
+                            <span class="cred-shield active" id="shield-2">🛡️</span>
+                            <span class="cred-shield active" id="shield-3">🛡️</span>
+                        </div>
+                    </div>
+                    <div class="timer-container" title="Antidote synthesis window before Dr. Vance's neurotoxin becomes fatal!">
+                        <span class="timer-pulse">⏱️</span>
+                        <span id="countdown-clock" class="timer-text">59:45</span>
+                    </div>
+                </div>
+
+                <div class="topbar-icons">
+                    <button class="top-tool-btn" onclick="openForensicLab()" title="Dr. Salunkhe Style Forensic Lab">🔬 Forensic Lab</button>
+                    <button class="top-tool-btn" onclick="openCorkboard()" title="Red-String Deduction Corkboard">🧵 Corkboard</button>
+                    <button class="top-tool-btn" onclick="toggleNotebook()" title="Case Notebook">📓 Notes</button>
+                    <button class="top-tool-btn" id="audio-toggle-btn" onclick="toggleAudio()" title="Sound Effects & Rain Ambience">🔊 Audio: ON</button>
+                    <button class="top-tool-btn reset-btn" onclick="confirmResetCase()" title="Restart Case">🔄 Reset</button>
+                </div>
+            </header>
+
+            <!-- Row 1: Case Briefing & Suspects -->
+            <div class="dashboard-grid">
+
+                <!-- Case File Card -->
+                <section class="card case-file-card" id="case">
+                    <img src="images/case.png" alt="Case File" class="case-file-image">
+                    
+                    <div class="case-file-overlay">
+                        <div class="case-brief">
+                            <span class="confidential-stamp">CONFIDENTIAL · CRIME SCENE</span>
+                            <h3>POISONING & QUANTUM DRIVE THEFT</h3>
+                            <p><strong>Victim:</strong> Dr. Marcus Vance (Critical Coma, Neurotoxin Dart)</p>
+                            <p><strong>Breach:</strong> 8:45 PM during emergency electrical blackout</p>
+                            <p><strong>Stolen:</strong> Quantum Laptop containing master antidote cipher</p>
+                            <div class="briefing-actions">
+                                <button class="crime-scene-btn" onclick="openCrimeScene()">
+                                    🔍 Inspect Crime Scene (Lab 204)
+                                </button>
+                                <button class="fsl-shortcut-btn" onclick="openForensicLab()">
+                                    🔬 Open Forensic Lab (FSL)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="laptop-photo" title="Crime Scene Evidence">
+                        <img src="images/laptop.jpeg" alt="Laptop evidence">
+                        <span class="polaroid-label">Scene Evidence</span>
+                    </div>
+                </section>
+
+                <!-- Suspects Card -->
+                <section class="card suspects-card" id="suspect">
+                    <div class="card-header-flex">
+                        <h2 class="card-title">👥 SUSPECTS & PERSONS OF INTEREST</h2>
+                        <span class="counter-badge" id="suspects-counter">0/8 Interrogated</span>
+                    </div>
+
+                    <div class="suspects-list">
+                        <!-- Suspect 1 -->
+                        <div class="suspect-mini" id="suspect-card-1" onclick="questionSuspect(1)">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/suspect1.png" alt="John Doe">
+                                <span class="suspect-status-tag" id="status-tag-1">Alibi Provided</span>
+                            </div>
+                            <h4>John Doe</h4>
+                            <p>Lead AI Coder · Age 29</p>
+                            <span class="suspect-risk low">Risk: Low</span>
+                        </div>
+
+                        <!-- Suspect 2 -->
+                        <div class="suspect-mini" id="suspect-card-2" onclick="questionSuspect(2)">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/jane.jpg" alt="Jane Smith">
+                                <span class="suspect-status-tag" id="status-tag-2">Designer</span>
+                            </div>
+                            <h4>Jane Smith</h4>
+                            <p>Digital Artist · Age 28</p>
+                            <span class="suspect-risk med">Risk: Medium</span>
+                        </div>
+
+                        <!-- Suspect 3: Michael Johnson (The Hidden Mastermind) -->
+                        <div class="suspect-mini" id="suspect-card-3" onclick="questionSuspect(3)">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/suspect3.png" alt="Michael Johnson">
+                                <span class="suspect-status-tag" id="status-tag-3">Grant Accountant</span>
+                            </div>
+                            <h4>Michael Johnson</h4>
+                            <p>Chief Financier · Age 42</p>
+                            <span class="suspect-risk high">Risk: Critical</span>
+                        </div>
+
+                        <!-- Suspect 4: Emily Carter (The Framed Whistleblower) -->
+                        <div class="suspect-mini extra-suspect" id="suspect-card-4" onclick="questionSuspect(4)" style="display:none;">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/emily.jpg" alt="Emily Carter">
+                                <span class="suspect-status-tag" id="status-tag-4">Prime Suspect</span>
+                            </div>
+                            <h4>Emily Carter</h4>
+                            <p>Researcher · Age 22</p>
+                            <span class="suspect-risk high">Risk: Prime Suspect</span>
+                        </div>
+
+                        <!-- Suspect 5 -->
+                        <div class="suspect-mini extra-suspect" id="suspect-card-5" onclick="questionSuspect(5)" style="display:none;">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/niar.jpg" alt="Priya Nair">
+                                <span class="suspect-status-tag" id="status-tag-5">Librarian</span>
+                            </div>
+                            <h4>Priya Nair</h4>
+                            <p>Archivist · Age 21</p>
+                            <span class="suspect-risk low">Risk: Low</span>
+                        </div>
+
+                        <!-- Suspect 6: Carlos Mendez (The Saboteur) -->
+                        <div class="suspect-mini extra-suspect" id="suspect-card-6" onclick="questionSuspect(6)" style="display:none;">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/375473.jpeg" alt="Carlos Mendez">
+                                <span class="suspect-status-tag" id="status-tag-6">Electrician</span>
+                            </div>
+                            <h4>Carlos Mendez</h4>
+                            <p>Maintenance · Age 34</p>
+                            <span class="suspect-risk med">Risk: High</span>
+                        </div>
+
+                        <!-- Suspect 7 -->
+                        <div class="suspect-mini extra-suspect" id="suspect-card-7" onclick="questionSuspect(7)" style="display:none;">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/mmm.jpg" alt="Olivia Brooks">
+                                <span class="suspect-status-tag" id="status-tag-7">Lab Chemist</span>
+                            </div>
+                            <h4>Olivia Brooks</h4>
+                            <p>Assistant · Age 24</p>
+                            <span class="suspect-risk low">Risk: Low</span>
+                        </div>
+
+                        <!-- Suspect 8 -->
+                        <div class="suspect-mini extra-suspect" id="suspect-card-8" onclick="questionSuspect(8)" style="display:none;">
+                            <div class="suspect-avatar-wrap">
+                                <img src="images/nnn.jpg" alt="Daniel Osei">
+                                <span class="suspect-status-tag" id="status-tag-8">Secretary</span>
+                            </div>
+                            <h4>Daniel Osei</h4>
+                            <p>Department Admin · Age 22</p>
+                            <span class="suspect-risk low">Risk: Low</span>
+                        </div>
+                    </div>
+
+                    <button id="view-suspects-btn" class="view-all-btn" onclick="toggleAllSuspects()">View All Suspects (8) →</button>
+                </section>
+
+            </div>
+
+            <!-- Row 2: Physical Evidence + Witnesses -->
+            <div class="dashboard-grid">
+
+                <!-- Evidence Card -->
+                <section class="card evidence-card" id="evidence">
+                    <div class="card-header-flex">
+                        <h2 class="card-title">🔍 FORENSIC EVIDENCE</h2>
+                        <span class="counter-badge" id="evidence-counter">0/5 Analyzed</span>
+                    </div>
+
+                    <div class="evidence-list">
+                        <!-- Evidence 1 -->
+                        <div class="evidence-item" id="evidence-box-1">
+                            <div class="evidence-photo" onclick="examineEvidence(1)">
+                                <img src="images/lap.png" alt="Laptop">
+                                <span class="evidence-number">1</span>
+                            </div>
+                            <p>Quantum Laptop</p>
+                            <span class="ev-status-badge">Primary Target</span>
+                        </div>
+
+                        <!-- Evidence 2 -->
+                        <div class="evidence-item" id="evidence-box-2">
+                            <div class="evidence-photo locked" onclick="examineEvidence(2)">
+                                <img src="images/security-camera.jpeg" alt="Camera">
+                                <span class="evidence-number">2</span>
+                                <span class="lock-icon">🔒</span>
+                            </div>
+                            <p>CCTV Corridor Tape</p>
+                            <button class="mini-tool-btn" id="cctv-btn" style="display:none;" onclick="event.stopPropagation(); openCCTVScrubber();">📹 Watch Tape</button>
+                        </div>
+
+                        <!-- Evidence 3 (Fingerprint Dusting) -->
+                        <div class="evidence-item" id="evidence-box-3">
+                            <div class="evidence-photo locked" onclick="examineEvidence(3)">
+                                <img src="images/fingerprint.jpeg" alt="Fingerprint">
+                                <span class="evidence-number">3</span>
+                                <span class="lock-icon">🔒</span>
+                            </div>
+                            <p>Smudged Fingerprint</p>
+                            <button class="mini-tool-btn fsl-btn" onclick="event.stopPropagation(); openForensicLab('dusting');">🧪 Dust in FSL</button>
+                        </div>
+
+                        <!-- Evidence 4 (Poisoned Cup / Login) -->
+                        <div class="evidence-item extra-evidence" id="evidence-box-4" style="display: none;">
+                            <div class="evidence-photo locked" onclick="examineEvidence(4)">
+                                <img src="images/login.jpg" alt="Poisoned Mug">
+                                <span class="evidence-number">4</span>
+                                <span class="lock-icon">🔒</span>
+                            </div>
+                            <p>Poisoned Coffee Cup</p>
+                            <button class="mini-tool-btn fsl-btn" onclick="event.stopPropagation(); openForensicLab('chemical');">🧪 Chemical Test</button>
+                        </div>
+
+                        <!-- Evidence 5 -->
+                        <div class="evidence-item extra-evidence" id="evidence-box-5" style="display:none;">
+                            <div class="evidence-photo locked" onclick="examineEvidence(5)">
+                                <img src="images/fabric.jpg" alt="Torn Fabric">
+                                <span class="evidence-number">5</span>
+                                <span class="lock-icon">🔒</span>
+                            </div>
+                            <p>Torn Blue Fabric</p>
+                            <span class="ev-status-badge">Door Hinge</span>
+                        </div>
+                    </div>
+
+                    <button id="view-evidence-btn" class="view-all-btn" onclick="toggleAllEvidence()">View All Evidence (5) →</button>
+                </section>
+
+                <!-- Witnesses Card -->
+                <section class="card witness-card" id="witness">
+                    <div class="card-header-flex">
+                        <h2 class="card-title">👁️ WITNESS STATEMENTS</h2>
+                        <span class="counter-badge" id="witness-counter">0/4 Questioned</span>
+                    </div>
+
+                    <div class="witnesses-scrollable">
+                        <!-- Witness 1 -->
+                        <div class="witness-content" id="witness-card-1" onclick="showWitnessStatement(1)">
+                            <img src="images/witness.png" alt="Sarah Thompson" class="witness-photo">
+                            <div class="witness-info">
+                                <h3>Sarah Thompson</h3>
+                                <p>Lecturer · Room 201</p>
+                                <p class="witness-preview">"I heard Dr. Vance gasping right after 8:40 PM..."</p>
+                            </div>
+                        </div>
+
+                        <!-- Witness 2 -->
+                        <div class="witness-content locked" id="witness-card-2" onclick="showWitnessStatement(2)">
+                            <div class="photo-lock-wrap">
+                                <img src="images/guard.png" alt="David Lee" class="witness-photo">
+                                <span class="witness-lock-badge">🔒 Locked</span>
+                            </div>
+                            <div class="witness-info">
+                                <h3>David Lee</h3>
+                                <p>Night Security Guard</p>
+                                <p class="witness-preview">Locked until door hinge inspected.</p>
+                            </div>
+                        </div>
+
+                        <!-- Witness 3 -->
+                        <div class="witness-content locked" id="witness-card-3" onclick="showWitnessStatement(3)">
+                            <div class="photo-lock-wrap">
+                                <img src="images/rachel.jpg" alt="Rachel Kim" class="witness-photo">
+                                <span class="witness-lock-badge">🔒 Locked</span>
+                            </div>
+                            <div class="witness-info">
+                                <h3>Rachel Kim</h3>
+                                <p>Biochemical Lab Assistant</p>
+                                <p class="witness-preview">Locked until poison toxicology verified.</p>
+                            </div>
+                        </div>
+
+                        <!-- Witness 4 -->
+                        <div class="witness-content locked" id="witness-card-4" onclick="showWitnessStatement(4)">
+                            <div class="photo-lock-wrap">
+                                <img src="images/tom.jpg" alt="Tom Baxter" class="witness-photo">
+                                <span class="witness-lock-badge">🔒 Locked</span>
+                            </div>
+                            <div class="witness-info">
+                                <h3>Tom Baxter</h3>
+                                <p>Chief Security Officer</p>
+                                <p class="witness-preview">Locked until CCTV tape examined.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Row 3: Investigation Command + Final Accusation -->
+            <div class="dashboard-grid">
+
+                <!-- Investigation Actions -->
+                <section class="card investigation-card" id="investigation">
+                    <h2 class="card-title">👣 INVESTIGATION COMMAND CENTER</h2>
+                    <p class="investigation-desc">
+                        Gather physical evidence from the room, test neurotoxins and fingerprints in the FSL lab, connect the web of lies on the corkboard, and interrogate the suspects!
+                    </p>
+
+                    <div class="investigation-actions">
+                        <button class="action-btn action-amber" onclick="openCrimeScene()">
+                            <span class="action-icon">🏢</span>
+                            Inspect Crime Scene
+                        </button>
+
+                        <button class="action-btn action-cyan" onclick="openForensicLab()">
+                            <span class="action-icon">🔬</span>
+                            FSL Forensic Lab
+                        </button>
+
+                        <button class="action-btn action-purple" onclick="openCorkboard()">
+                            <span class="action-icon">🧵</span>
+                            Deduction Corkboard
+                        </button>
+
+                        <button class="action-btn action-green" onclick="scrollToSection('suspect')">
+                            <span class="action-icon">💬</span>
+                            Interrogate Suspects
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Final Accusation Card -->
+                <section class="card accusation-card" id="accusation">
+                    <h2 class="card-title">⚖️ THE FINAL CONFRONTATION</h2>
+                    
+                    <div id="accusation-locked">
+                        <p class="investigation-desc">
+                            🔒 <strong>Case building in progress.</strong> Uncover the murder weapon, prove who cut the power, and expose the mastermind before the antidote expires!
+                        </p>
+                        <div class="progress-bar-container">
+                            <div id="accusation-progress-bar" class="progress-bar-fill"></div>
+                        </div>
+                        <p id="accusation-progress" class="investigation-progress-text"></p>
+                    </div>
+
+                    <div id="accusation-unlocked" style="display:none;">
+                        <p class="investigation-desc">
+                            ⚡ <strong>All physical and forensic clues assembled!</strong> Step into the interrogation chamber, point your finger at the true mastermind, and demand the antidote!
+                        </p>
+
+                        <div class="accuse-carousel">
+                            <button class="carousel-arrow" onclick="prevSuspect()">◀</button>
+                            <div class="carousel-suspect">
+                                <img id="carousel-img" class="carousel-img" src="images/suspect1.png" alt="Suspect">
+                                <h4 id="carousel-name">John Doe</h4>
+                                <span id="carousel-role" class="carousel-role-text">Lead AI Coder</span>
+                            </div>
+                            <button class="carousel-arrow" onclick="nextSuspect()">▶</button>
+                        </div>
+
+                        <button class="accuse-btn" onclick="confirmAccusation()">⚖️ Accuse This Person (Daya Style!)</button>
+                    </div>
+
+                    <div class="culprit-photo" id="culprit-display-box">
+                        <span class="culprit-question" id="culprit-placeholder">?</span>
+                        <img id="culprit-img" class="culprit-img" style="display:none;" alt="Accused">
+                        <div id="culprit-result" class="culprit-result" style="display:none;"></div>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+    
+    </div> <!-- closes .app -->
+
+    <img src="images/clip.png" alt="" class="newspaper-decoration">
+    <button id="notebook-toggle" onclick="toggleNotebook()">📓 Notes</button>
+
+    <!-- Detective's Notebook Drawer -->
+    <div id="notebook-panel" class="notebook-panel">
+        <div class="notebook-header">
+            <h3>📓 Case Dossier: The Midnight Protocol</h3>
+            <button class="notebook-close" onclick="toggleNotebook()">✕</button>
+        </div>
+
+        <div class="notebook-tabs">
+            <button class="tab-btn active" onclick="switchTab('evidence', this)">Evidence</button>
+            <button class="tab-btn" onclick="switchTab('suspects', this)">Suspects</button>
+            <button class="tab-btn" onclick="switchTab('witnesses', this)">Witnesses</button>
+            <button class="tab-btn" onclick="switchTab('breakthroughs', this)">Deductions</button>
+        </div>
+
+        <div id="notebook-evidence" class="notebook-content"></div>
+        <div id="notebook-suspects" class="notebook-content" style="display:none;"></div>
+        <div id="notebook-witnesses" class="notebook-content" style="display:none;"></div>
+        <div id="notebook-breakthroughs" class="notebook-content" style="display:none;"></div>
+    </div>
+
+    <!-- General Message Modal -->
+    <div id="messagemodal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeMessage()">✕</button>
+            <h3 id="modal-title" class="modal-title"></h3>
+            <div id="modal-text" class="modal-body-text"></div>
+            <div class="modal-actions">
+                <button class="modal-confirm-btn" onclick="closeMessage()">Continue Investigation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         INTERACTIVE CRIME SCENE MODAL (With UV Blacklight Switch!)
+         ========================================================== -->
+    <div id="crimeSceneModal" class="modal-overlay">
+        <div class="modal-box crime-scene-modal-box">
+            <button class="modal-close" onclick="closeCrimeScene()">✕</button>
+            
+            <div class="scene-header-bar">
+                <div>
+                    <h3 class="modal-title">🏢 Crime Scene: Lab 204 & Dr. Vance's Study</h3>
+                    <p class="scene-instruction">Search for physical clues, sabotaged breakers, and poisoned items.</p>
+                </div>
+                <button id="uv-light-btn" class="uv-toggle-btn" onclick="toggleUVMode()">
+                    🟣 UV Blacklight: OFF
+                </button>
+            </div>
+
+            <div class="crime-scene-viewport" id="crime-scene-viewport">
+                <img src="images/crime_scene.jpg" alt="Crime Scene Lab" class="crime-scene-img" id="crime-scene-img">
+                
+                <!-- UV Secret Glowing Clues Overlay -->
+                <div id="uv-overlay" class="uv-overlay" style="display:none;">
+                    <div class="uv-glow-text" style="left: 70%; top: 30%;">
+                        "VANCE FOUND THE SHELL ACCOUNTS - SILENCE HIM"
+                    </div>
+                    <div class="uv-glow-footprints" style="left: 36%; top: 58%;">
+                        🐾 Fluorescent Boot Traces (Size 10 - Men's)
+                    </div>
+                </div>
+
+                <!-- Hotspot 1: Desk & Poisoned Coffee Cup -->
+                <button class="hotspot-pin pin-desk" onclick="inspectHotspot('desk')" title="Inspect Desk & Laptop Bay">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-icon">☕</span>
+                    <span class="pin-tooltip">Desk & Poisoned Mug</span>
+                </button>
+
+                <!-- Hotspot 2: Wall CCTV Camera -->
+                <button class="hotspot-pin pin-camera" onclick="inspectHotspot('camera')" title="Inspect CCTV Camera">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-icon">📹</span>
+                    <span class="pin-tooltip">Wall CCTV Dome</span>
+                </button>
+
+                <!-- Hotspot 3: Breaker Box & Door Hinge -->
+                <button class="hotspot-pin pin-door" onclick="inspectHotspot('door')" title="Inspect Breaker & Door">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-icon">🚪</span>
+                    <span class="pin-tooltip">Door Hinge & Breaker</span>
+                </button>
+
+                <!-- Hotspot 4: Auxiliary Server Terminal -->
+                <button class="hotspot-pin pin-terminal" onclick="inspectHotspot('terminal')" title="Inspect Server Logs">
+                    <span class="pin-pulse"></span>
+                    <span class="pin-icon">💻</span>
+                    <span class="pin-tooltip">Terminal Override</span>
+                </button>
+            </div>
+
+            <div class="scene-footer">
+                <span id="scene-clues-found">Clues discovered: 0/4</span>
+                <button class="modal-confirm-btn" onclick="closeCrimeScene()">Exit Room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         FORENSIC SCIENCE LABORATORY (FSL) MODAL
+         ========================================================== -->
+    <div id="forensicLabModal" class="modal-overlay">
+        <div class="modal-box fsl-modal-box">
+            <button class="modal-close" onclick="closeForensicLab()">✕</button>
+            
+            <div class="fsl-header">
+                <span class="fsl-badge">CENTRAL FORENSIC SCIENCE LABORATORY (FSL)</span>
+                <h3>🔬 Chemical & Latent Trace Examination</h3>
+                <p>Perform hands-on chemical toxicity testing and fingerprint ridge lifting.</p>
+            </div>
+
+            <div class="fsl-tabs">
+                <button class="fsl-tab-btn active" onclick="switchFSLTab('chemical', this)">🧪 Chemical Poison Test</button>
+                <button class="fsl-tab-btn" onclick="switchFSLTab('dusting', this)">🖐️ Fingerprint Dusting</button>
+            </div>
+
+            <!-- Tab 1: Chemical Poison Reagent Test -->
+            <div id="fsl-chemical-station" class="fsl-content">
+                <div class="chem-lab-grid">
+                    <div class="chem-beaker-box">
+                        <div class="test-tube-wrap">
+                            <div class="test-tube">
+                                <div id="chem-liquid" class="chem-liquid amber"></div>
+                            </div>
+                            <div class="dropper-graphic" id="chem-dropper">💧 Reagent</div>
+                        </div>
+                        <p class="chem-sample-label">Sample: Swab from Dr. Vance's Coffee Cup</p>
+                    </div>
+                    
+                    <div class="chem-controls">
+                        <h4>Toxicology Reagent Analysis</h4>
+                        <p class="chem-instruction">
+                            Click <strong>"Apply Chemical Reagent"</strong> to add Nitric Sulfide solution. 
+                            If the solution turns <span style="color:#ff4d4f; font-weight:bold;">Fluorescent Crimson</span>, it confirms synthetic Neurotoxin-9!
+                        </p>
+                        <button id="add-reagent-btn" class="chem-action-btn" onclick="runChemicalTest()">🧪 Apply Chemical Reagent</button>
+                        <div id="chem-result-box" class="chem-result-box" style="display:none;">
+                            <strong style="color:#ff4d4f;">⚠️ CRITICAL MATCH CONFIRMED!</strong>
+                            <p>Neurotoxin-9 identified. Source: High-grade biochemical compound only accessible to the university grant director!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Fingerprint Dusting Station -->
+            <div id="fsl-dusting-station" class="fsl-content" style="display:none;">
+                <div class="dusting-grid">
+                    <div class="dusting-canvas-wrap">
+                        <canvas id="dusting-canvas" width="280" height="280"></canvas>
+                        <p class="canvas-hint">Drag your mouse across the metallic casing to apply charcoal powder!</p>
+                    </div>
+                    <div class="dusting-controls">
+                        <h4>Latent Fingerprint Lifting</h4>
+                        <div class="powder-progress-bar">
+                            <div id="powder-progress" class="powder-fill"></div>
+                        </div>
+                        <p id="powder-percent" class="powder-percent-text">Powder Coverage: 0%</p>
+                        
+                        <button id="lift-tape-btn" class="chem-action-btn" disabled onclick="liftFingerprintTape()">
+                            🩹 Apply Adhesive Tape & Match Database
+                        </button>
+                        
+                        <div id="print-match-result" class="chem-result-box" style="display:none;">
+                            <strong style="color:#52c41a;">✔ FINGERPRINT MATCH!</strong>
+                            <p id="print-match-text"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         INTERACTIVE RED-STRING CORKBOARD MODAL (Mind Palace)
+         ========================================================== -->
+    <div id="corkboardModal" class="modal-overlay">
+        <div class="modal-box corkboard-modal-box">
+            <button class="modal-close" onclick="closeCorkboard()">✕</button>
+            
+            <div class="corkboard-header">
+                <span class="fsl-badge">DETECTIVE MIND PALACE</span>
+                <h3>🧵 "Kuch Toh Gadbad Hai..." Deduction Board</h3>
+                <p>Click two pins to stretch red yarn between them. Connect clues to expose the conspiracy!</p>
+            </div>
+
+            <div class="corkboard-container" id="corkboard-container">
+                <canvas id="corkboard-canvas" width="760" height="420"></canvas>
+
+                <!-- Clue Pin 1: Emily's Statement -->
+                <div class="cork-pin pin-1" id="cork-pin-1" onclick="selectCorkPin(1)">
+                    <div class="pushpin">📌</div>
+                    <div class="cork-polaroid">
+                        <img src="images/emily.jpg" alt="Emily">
+                        <span>Emily: "Lost jacket a week ago"</span>
+                    </div>
+                </div>
+
+                <!-- Clue Pin 2: Torn Blue Fabric -->
+                <div class="cork-pin pin-2" id="cork-pin-2" onclick="selectCorkPin(2)">
+                    <div class="pushpin">📌</div>
+                    <div class="cork-polaroid">
+                        <img src="images/fabric.jpg" alt="Fabric">
+                        <span>Torn Blue Fabric (Door Hinge)</span>
+                    </div>
+                </div>
+
+                <!-- Clue Pin 3: Poisoned Cup -->
+                <div class="cork-pin pin-3" id="cork-pin-3" onclick="selectCorkPin(3)">
+                    <div class="pushpin">📌</div>
+                    <div class="cork-polaroid">
+                        <img src="images/login.jpg" alt="Poison Cup">
+                        <span>Neurotoxin-9 Coffee Cup</span>
+                    </div>
+                </div>
+
+                <!-- Clue Pin 4: Michael Johnson's Ledger -->
+                <div class="cork-pin pin-4" id="cork-pin-4" onclick="selectCorkPin(4)">
+                    <div class="pushpin">📌</div>
+                    <div class="cork-polaroid">
+                        <img src="images/suspect3.png" alt="Michael">
+                        <span>Michael: Embezzlement Audit</span>
+                    </div>
+                </div>
+
+                <!-- Clue Pin 5: CCTV 8:40 Breaker -->
+                <div class="cork-pin pin-5" id="cork-pin-5" onclick="selectCorkPin(5)">
+                    <div class="pushpin">📌</div>
+                    <div class="cork-polaroid">
+                        <img src="images/security-camera.jpeg" alt="CCTV">
+                        <span>Blackout Breaker Trip (8:40 PM)</span>
+                    </div>
+                </div>
+
+                <!-- Clue Pin 6: Carlos Mendez Toolbox -->
+                <div class="cork-pin pin-6" id="cork-pin-6" onclick="selectCorkPin(6)">
+                    <div class="pushpin">📌</div>
+                    <div class="cork-polaroid">
+                        <img src="images/375473.jpeg" alt="Carlos">
+                        <span>Carlos: Wire Cutters in Bag</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="corkboard-footer">
+                <span id="corkboard-deductions-count">Breakthroughs Discovered: 0/3</span>
+                <button class="clear-strings-btn" onclick="clearCorkStrings()">Clear Yarn Strings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         HIGH-DRAMA INTERROGATION MODAL (With Heart-Rate EKG & Table Slam!)
+         ========================================================== -->
+    <div id="interrogationModal" class="modal-overlay">
+        <div class="modal-box interrogation-modal-box">
+            <button class="modal-close" onclick="closeInterrogation()">✕</button>
+            
+            <div class="interrogation-header">
+                <img id="interrogate-img" src="" alt="Suspect" class="interrogate-portrait">
+                <div class="interrogate-details">
+                    <h3 id="interrogate-name">Suspect Name</h3>
+                    <p id="interrogate-meta" class="interrogate-sub">Occupation · Age</p>
+                    <span id="interrogate-attitude" class="attitude-badge calm">Calm</span>
+                </div>
+
+                <!-- Live EKG Heart Rate Monitor -->
+                <div class="ekg-monitor">
+                    <span class="ekg-label">HEART RATE</span>
+                    <div class="ekg-pulse-box">
+                        <span id="ekg-bpm" class="ekg-bpm-val">76</span>
+                        <span class="ekg-unit">BPM</span>
+                    </div>
+                    <div class="ekg-line-graphic" id="ekg-line"></div>
+                </div>
+            </div>
+
+            <!-- Dialogue Bubble -->
+            <div class="dialogue-card">
+                <div class="dialogue-speaker" id="dialogue-speaker">Suspect</div>
+                <p id="dialogue-text" class="dialogue-text">"Ask me what you want, Detective."</p>
+            </div>
+
+            <!-- Interrogation Actions -->
+            <div class="interrogation-actions-bar">
+                <button class="dialogue-action-btn" onclick="askAlibi()">💬 Ask for Alibi / Movements</button>
+                <button class="dialogue-action-btn press-btn" onclick="pressSuspect()">
+                    ⚡ "Kuch Toh Gadbad Hai!" (Press)
+                </button>
+                <button class="dialogue-action-btn slam-btn" onclick="openEvidencePresentation()">
+                    💥 Slam Evidence on Table!
+                </button>
+            </div>
+
+            <!-- Evidence Presentation Drawer -->
+            <div id="evidence-presentation-drawer" class="evidence-presentation-drawer" style="display:none;">
+                <h4 class="drawer-title">Select Physical Proof to Confront Suspect With:</h4>
+                <div id="evidence-choices-grid" class="evidence-choices-grid">
+                    <!-- Populated dynamically with gathered evidence -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CCTV Footage Scrubber Modal -->
+    <div id="cctvModal" class="modal-overlay">
+        <div class="modal-box cctv-modal-box">
+            <button class="modal-close" onclick="closeCCTV()">✕</button>
+            <h3 class="modal-title">📹 Security Camera #02 — Tape Playback</h3>
+            <div class="cctv-monitor">
+                <div class="cctv-screen">
+                    <img id="cctv-frame-img" src="images/security-camera.jpeg" alt="CCTV Feed">
+                    <div class="cctv-scanlines"></div>
+                    <div class="cctv-osd">
+                        <span class="rec-dot">● REC</span>
+                        <span id="cctv-timestamp">CAM-02 | 20:45:12 PM</span>
+                    </div>
+                    <div id="cctv-alert-overlay" class="cctv-alert">⚠️ BLACKOUT MOVEMENT DETECTED</div>
+                </div>
+                <div class="cctv-controls">
+                    <label for="cctv-slider">Time Scrubber (8:00 PM - 9:00 PM):</label>
+                    <input type="range" id="cctv-slider" min="0" max="60" value="45" oninput="scrubCCTV(this.value)">
+                    <div class="cctv-scrub-labels">
+                        <span>8:00 PM</span>
+                        <span class="highlight-timestamp">8:40 PM (Blackout)</span>
+                        <span class="highlight-timestamp">8:45 PM (Breach)</span>
+                        <span>9:00 PM</span>
+                    </div>
+                </div>
+            </div>
+            <p id="cctv-caption" class="cctv-caption-text">Scrub through the footage to find when the lab was breached.</p>
+        </div>
+    </div>
+
+    <!-- Contradiction Dramatic Flash Screen (C.I.D. Style) -->
+    <div id="contradictionFlash" class="contradiction-flash">
+        <div class="contradiction-banner">
+            <span class="contradiction-sub">⚡ KUCH TOH GADBAD HAI! ⚡</span>
+            <h1>💥 AB TOH SACH BOLNA HI PADEGA! 💥</h1>
+            <p id="contradiction-caption">The alibi shatters under forensic proof!</p>
+        </div>
+    </div>
+
+    <!-- Case Verdict & Rating Modal -->
+    <div id="verdictModal" class="modal-overlay">
+        <div class="modal-box verdict-modal-box">
+            <div class="verdict-banner" id="verdict-banner-theme">
+                <h2 id="verdict-modal-title">CASE SOLVED · ANTIDOTE SECURED</h2>
+                <div id="verdict-stars" class="verdict-stars">⭐⭐⭐</div>
+            </div>
+
+            <div class="verdict-content">
+                <h3 id="verdict-status-headline" style="color:#52c41a;">Dr. Vance Saved! The Mastermind is Handcuffed!</h3>
+                <p id="verdict-narrative" class="verdict-narrative"></p>
+
+                <div class="verdict-stats-grid">
+                    <div class="v-stat-card">
+                        <span class="v-stat-label">Detective Rank</span>
+                        <strong class="v-stat-val" id="v-rank">Supercop ACP</strong>
+                    </div>
+                    <div class="v-stat-card">
+                        <span class="v-stat-label">Credibility Left</span>
+                        <strong class="v-stat-val" id="v-cred">3/3 Shields</strong>
+                    </div>
+                    <div class="v-stat-card">
+                        <span class="v-stat-label">Forensics Solved</span>
+                        <strong class="v-stat-val" id="v-evidence">5/5 Clues</strong>
+                    </div>
+                </div>
+
+                <div class="verdict-actions">
+                    <button class="modal-confirm-btn" onclick="closeVerdict()">Close Case Report</button>
+                    <button class="replay-btn" onclick="confirmResetCase()">Play Again 🔄</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
